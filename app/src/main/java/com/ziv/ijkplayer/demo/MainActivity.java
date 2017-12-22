@@ -9,9 +9,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -20,24 +23,28 @@ import com.ziv.ijkplayer.demo.fragment.TracksFragment;
 import com.ziv.ijkplayer.demo.media.AndroidMediaController;
 import com.ziv.ijkplayer.demo.media.IjkVideoView;
 import com.ziv.ijkplayer.demo.media.MeasureHelper;
+import com.ziv.ijkplayer.demo.media.MyVideoView;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaFormat;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
-public class MainActivity extends AppCompatActivity implements TracksFragment.ITrackHolder{
+public class MainActivity extends AppCompatActivity implements TracksFragment.ITrackHolder, View.OnClickListener {
     private AndroidMediaController mMediaController;
-    private IjkVideoView mVideoView;
+    private MyVideoView mVideoView;
     private TextView mToastTextView;
     private TableLayout mHudView;
     private DrawerLayout mDrawerLayout;
     private ViewGroup mRightDrawer;
+    private Button choiceDecoderBtn;
 
     private Settings mSettings;
     private boolean mBackPressed;
 
     private String mVideoPath;
     private Uri mVideoUri;
+
+    private boolean isHardDecode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
 
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
+        choiceDecoderBtn = findViewById(R.id.change_decoder_btn);
+        choiceDecoderBtn.setOnClickListener(this);
         // init player
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
@@ -174,5 +183,32 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
     @Override
     public void deselectTrack(int stream) {
         mVideoView.deselectTrack(stream);
+    }
+
+    /**
+     * 按钮点击事件
+     *
+     * @param view 被点击View
+     */
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.change_decoder_btn:
+
+                if (!isHardDecode) {
+                    mSettings.setPlayer("1");
+                    choiceDecoderBtn.setText("硬解");
+                    isHardDecode = true;
+                } else {
+                    mSettings.setPlayer("2");
+                    choiceDecoderBtn.setText("软解");
+                    isHardDecode = false;
+                }
+                mVideoView.switchDecode(mVideoUri);
+                break;
+            default:
+                break;
+        }
     }
 }

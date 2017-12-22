@@ -20,6 +20,7 @@ package com.ziv.ijkplayer.demo.application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.ziv.ijkplayer.demo.R;
 
@@ -43,9 +44,15 @@ public class Settings {
         return mSharedPreferences.getBoolean(key, false);
     }
 
+    public void setPlayer(String decodeType){
+        String key = mAppContext.getString(R.string.pref_key_player);
+        mSharedPreferences.edit().putString(key, decodeType).apply();
+    }
+
     public int getPlayer() {
         String key = mAppContext.getString(R.string.pref_key_player);
         String value = mSharedPreferences.getString(key, "");
+        Log.d("player","Setting player type is " + value);
         try {
             return Integer.valueOf(value).intValue();
         } catch (NumberFormatException e) {

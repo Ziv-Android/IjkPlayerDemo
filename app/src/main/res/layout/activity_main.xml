@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.ziv.ijkplayer.demo.media.IjkVideoView
+        <com.ziv.ijkplayer.demo.media.MyVideoView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,4 +53,15 @@
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:background="@color/ijk_transparent_dark" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp">
+        <Button
+            android:id="@+id/change_decoder_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="解码器"/>
+    </FrameLayout>
 </android.support.v4.widget.DrawerLayout>

@@ -32,8 +32,4 @@ dependencies {
 
     // ExoPlayer as IMediaPlayer: optional, experimental
     compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.4'
-
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.tencent.map:tencent-map-vector-sdk:4.0.5.2'
-    compile 'cn.pedant.sweetalert:library:1.3'
 }
