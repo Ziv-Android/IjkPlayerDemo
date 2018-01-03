@@ -1,6 +1,5 @@
 package com.ziv.ijkplayer.demo;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,7 +18,6 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class PlayerActivity extends AppCompatActivity {
     private SurfaceView mSurfaceViewVideo;
     IjkMediaPlayer ijkMediaPlayer;
-    private Uri mVideoUri;
 //    private String url = "http://ips.ifeng.com/video02.ifeng.com/video04/2011/03/24/480x360_offline20110324.mp4";
     private String url = "http://219.135.57.140/moviets.tc.qq.com/ACb17d7LLDu6P863jc6xqU6VTmB3XXoinL6kEc0543xM/7fuLya9FY3pJGeKHFaMWFKiE2nCzRwRbaVZeudOgJ5A85Uj0TmvzqgdXiWQqSayyYJ6UO1F_aUzrut4BSIs7yH5RYJDLEs7TKikPDLeITDkO6C8693p50Utg2arck0WdMTUdmva4QXJGOX8CdnJT8Q/s0025cu1a4z.322002.ts.m3u8?cdncode=%2F18907E7BE0798990%2F&ver=4&sdtfrom=v8137&cost=low";
 
@@ -32,8 +30,6 @@ public class PlayerActivity extends AppCompatActivity {
         // init player
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
-
-        mVideoUri = Uri.parse(url);
 
         try {
             ijkMediaPlayer = new IjkMediaPlayer();
