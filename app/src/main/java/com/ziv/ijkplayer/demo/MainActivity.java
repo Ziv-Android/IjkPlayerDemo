@@ -1,7 +1,11 @@
 package com.ziv.ijkplayer.demo;
 
 import android.graphics.Color;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +29,9 @@ import com.ziv.ijkplayer.demo.media.IjkVideoView;
 import com.ziv.ijkplayer.demo.media.MeasureHelper;
 import com.ziv.ijkplayer.demo.media.MyVideoView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaFormat;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
@@ -46,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
 
     private boolean isHardDecode = false;
 
+    private ArrayList<HashMap<String, String>> datas = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +63,12 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
         mSettings = new Settings(this);
 
 //        String url = "http://ips.ifeng.com/video02.ifeng.com/video04/2011/03/24/480x360_offline20110324.mp4";
-        String url = "http://183.60.23.18/moviets.tc.qq.com/AVHF97ewAx5UzQBPIS_pGkK0ikdCrXXnn-8mzAE2zGP0/KI2Pf19ddMTEF_04CLoG2ASa6xX2c3IGb1wu3pEIxCB-jAjGCnCllxT-kKAwYIOnaXNCDcfVIm4wZVHX3QOcfxN8KHCYbF3CxuoGOTl_iuIR9FYi5i_RIgTmUyuoYhpFXBl-m-9FgB_g_AozC4vUeQ/s0025cu1a4z.322003.ts.m3u8?ver=4";
+        String url = "http://113.105.141.16/moviets.tc.qq.com/AL0GUV3WKKglywgolnfVsv8suBKh0asuJk2QTRfnC_q8/5ct543isjV5whUTwYuhfzWNpI3PcpwLQnWFqb3b0yk4lp1ryE2kDYGQl7zoKDdfbfs8pOe_hIRUA8Emjwc2i7hnss7_3zvEURnkPcakLVPYIBdwUb4bA2JsItrY3MUaHqsMOko8BzpodUWr6thVPUQ/o0025aj844b.322002.ts.m3u8?ver=4";
         mVideoUri = Uri.parse(url);
 
         // init UI
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         mMediaController = new AndroidMediaController(this, false);
@@ -84,6 +93,52 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
 
         mVideoView.setVideoURI(mVideoUri);
         mVideoView.start();
+
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            showDecodeSupport(MediaCodecList.ALL_CODECS);
+//            showDecodeSupport(MediaCodecList.REGULAR_CODECS);
+//        }
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+//            int codecCount = MediaCodecList.getCodecCount();
+//            Log.d("MediaCodecList", "codecCount = " + codecCount);
+//            HashMap<String, String> map;
+//            for (int i = 0; i < codecCount; i++) {
+//                MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
+//                map = new HashMap<>();
+//                if (!codecInfo.isEncoder()) {
+//                    continue;
+//                }
+//                map.put("decoderName", codecInfo.getName());
+//                String[] types = codecInfo.getSupportedTypes();
+//                for (int j = 0; j < types.length; j++) {
+//                    if (map.containsValue(types[j])) {
+//                        continue;
+//                    } else {
+//                        map.put("decoderType", types[j]);
+//                    }
+//                }
+//                Log.d("MediaCodecList", "Decode[" + i + "]" + "\t:name = " + map.get("decoderName") + "\t,Type = " + map.get("decoderType"));
+//                datas.add(map);
+//            }
+//        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void showDecodeSupport(int type) {
+        MediaCodecList mediaCodecList = new MediaCodecList(type);
+        MediaCodecInfo[] codecInfos = mediaCodecList.getCodecInfos();
+        for (MediaCodecInfo info : codecInfos) {
+            String name = info.getName();
+            String supportedTypes = "";
+            String[] supportedTypesArray = info.getSupportedTypes();
+            for (String supportedType : supportedTypesArray) {
+                supportedTypes = supportedTypes + supportedType + ", ";
+            }
+            Log.d("MediaCodecList", "name = " + name);
+            Log.d("MediaCodecList", "supportedTypes = " + supportedTypes);
+        }
+        Log.d("MediaCodecList", "=========================================");
     }
 
     @Override
@@ -193,15 +248,18 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
     @Override
     public void onClick(View view) {
         int id = view.getId();
+        boolean usingMediaCodec = mSettings.getUsingMediaCodec();
         switch (id) {
             case R.id.change_decoder_btn:
 
                 if (!isHardDecode) {
                     mSettings.setPlayer("1");
+//                    mSettings.setUsingMediaCodec(true);
                     choiceDecoderBtn.setText("硬解");
                     isHardDecode = true;
                 } else {
                     mSettings.setPlayer("2");
+//                    mSettings.setUsingMediaCodec(false);
                     choiceDecoderBtn.setText("软解");
                     isHardDecode = false;
                 }
@@ -210,5 +268,6 @@ public class MainActivity extends AppCompatActivity implements TracksFragment.IT
             default:
                 break;
         }
+        Log.e("videoview", "usingMediaCodec is " + usingMediaCodec);
     }
 }

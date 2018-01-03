@@ -52,12 +52,17 @@ public class Settings {
     public int getPlayer() {
         String key = mAppContext.getString(R.string.pref_key_player);
         String value = mSharedPreferences.getString(key, "");
-        Log.d("player","Setting player type is " + value);
+        Log.d("videoview","Setting player type is " + value);
         try {
             return Integer.valueOf(value).intValue();
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    public void setUsingMediaCodec(boolean usingMediaCodec) {
+        String key = mAppContext.getString(R.string.pref_key_using_media_codec);
+        mSharedPreferences.edit().putBoolean(key, usingMediaCodec).apply();
     }
 
     public boolean getUsingMediaCodec() {
@@ -92,7 +97,7 @@ public class Settings {
 
     public boolean getEnableSurfaceView() {
         String key = mAppContext.getString(R.string.pref_key_enable_surface_view);
-        return mSharedPreferences.getBoolean(key, false);
+        return mSharedPreferences.getBoolean(key, true);
     }
 
     public boolean getEnableTextureView() {
