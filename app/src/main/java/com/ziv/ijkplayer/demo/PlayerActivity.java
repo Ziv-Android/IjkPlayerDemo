@@ -1,5 +1,7 @@
 package com.ziv.ijkplayer.demo;
 
+import android.app.ActivityManager;
+import android.content.pm.ConfigurationInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +18,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 
 public class PlayerActivity extends AppCompatActivity {
+    private static final String TAG = PlayerActivity.class.getSimpleName();
     private SurfaceView mSurfaceViewVideo;
     IjkMediaPlayer ijkMediaPlayer;
 //    private String url = "http://ips.ifeng.com/video02.ifeng.com/video04/2011/03/24/480x360_offline20110324.mp4";
@@ -25,6 +28,10 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        ConfigurationInfo deviceConfigurationInfo = activityManager.getDeviceConfigurationInfo();
+        Log.d(TAG, "PlayerActivity.onCreate() - Support OpenGL ES is " + (deviceConfigurationInfo.reqGlEsVersion >= 0x2000));
 
         mSurfaceViewVideo = findViewById(R.id.video_view);
         // init player
